@@ -32,6 +32,24 @@ public class ResourceManager : ScriptableObject
         }
     }
 
+    public bool TotalIsMoreOrEqual(Resource res, int amt)
+    {
+        bool isMore = false;
+
+        foreach(ResourceTotal rt in resourceTotals)
+        {
+            if (rt.MyResource == res)
+            {
+                if (rt.MyAmt >= amt)
+                {
+                    isMore = true;
+                }
+            }
+        }
+
+        return isMore;
+    }
+
     //! Method to add to a ResourceTotal in resourceTotals. Checks to ensure resource total exists first.
     public void AddToTotal(Resource res, int amt)
     {

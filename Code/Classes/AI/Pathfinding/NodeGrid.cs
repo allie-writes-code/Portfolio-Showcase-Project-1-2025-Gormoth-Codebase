@@ -42,6 +42,7 @@ public class NodeGrid : MonoBehaviour
                 Vector3 worldPoint = worldBottomLeft +
                     Vector3.right * (x * nodeDiameter + nodeRadius)
                     + Vector3.forward * (y * nodeDiameter + nodeRadius);
+                worldPoint.y = 1;
 
                 bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask));
                 grid[x, y] = new PathNode(walkable, worldPoint, x, y);
@@ -98,6 +99,7 @@ public class NodeGrid : MonoBehaviour
         return grid[x, y];
     }
 
+    /*
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
@@ -111,4 +113,5 @@ public class NodeGrid : MonoBehaviour
             }
         }
     }
+    */
 }

@@ -8,10 +8,10 @@ public class Stat : ScriptableObject
     //!  Float value, set in editor, no access at runtime to change value.
     //! Return for this value, by default, gives the adjusted value of: (base + add) * xplier 
     [SerializeField]
-    private float baseAmt;
+    private float total;
 
     [SerializeField]
-    private float addAmt;
+    private float baseAmt;
     [SerializeField]
     private float xPlier;
 
@@ -19,7 +19,11 @@ public class Stat : ScriptableObject
     //! Public Get method for stat value.
     public float Value
     {
-        get {  return (baseAmt + addAmt) * xPlier; }
+        get 
+        { 
+            total = (baseAmt * xPlier); 
+            return total;
+        }
     }
 
     //! Public Get method for baseAmt.
@@ -29,10 +33,10 @@ public class Stat : ScriptableObject
     }
 
     //! Public Get and Set method for addAmt.
-    public float AddAmt
+    public float BaseAmt
     {
-        get { return addAmt; }
-        set { addAmt = value; }
+        get { return baseAmt; }
+        set { baseAmt = value; }
     }
 
     //! Public Get and Set method for xPlier.

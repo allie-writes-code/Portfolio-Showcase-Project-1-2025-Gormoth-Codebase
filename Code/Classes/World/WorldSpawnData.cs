@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 //! ScriptableObject class for defining world spawn data instances. This class holds initial world generation variables as well as maintains the world in game.
@@ -21,7 +22,16 @@ public class WorldSpawnData : ScriptableObject
 
     public GameObject corePrefab;
 
+    public GameObject playerPrefab;
+
+    public GameObject enemyPrefab;
+
     public WorldObjecfSpawnChance[] resourceDroppers;
-    public int resourceDroppersMinAmt = 10;
     public int resourceDroppersMaxAmt = 50;
+    public int currentResourceDroppersTotal = 0;
+
+    public Stat maxEnemiesToSpawn;
+    public int currentEnemyTotal = 0;
+
+    public List<Vector3> boundaryPositions = new List<Vector3>();
 }

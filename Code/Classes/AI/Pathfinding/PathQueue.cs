@@ -37,10 +37,12 @@ public class PathQueue : MonoBehaviour
 
     public void FinishedProcessingPath(Vector3[] path, bool success)
     {
-        Debug.Log("Waypoints in path - Finished Processing Path: " + path.Length);
-        currentPathRequest.callback(path, success);
-        isProcessingPath = false;
-        TryProcessNext();
+        if (currentPathRequest.callback != null)
+        {
+            currentPathRequest.callback(path, success);
+            isProcessingPath = false;
+            TryProcessNext();
+        }
     }
 
     struct PathRequest

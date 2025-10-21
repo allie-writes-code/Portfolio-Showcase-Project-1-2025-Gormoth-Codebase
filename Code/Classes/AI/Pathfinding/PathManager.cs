@@ -74,13 +74,13 @@ public class PathManager : MonoBehaviour
         }
         
         yield return null;
+
         if (pathSuccess)
         {
             waypoints = RetracePath(startNode, targetNode);
             if (waypoints.Length == 0) pathSuccess = false;
         }
 
-        Debug.Log("Waypoints in path - Find Path: " + waypoints.Length);
         pathQueue.FinishedProcessingPath(waypoints, pathSuccess);
     }
 
@@ -88,9 +88,6 @@ public class PathManager : MonoBehaviour
     {
         List<PathNode> path = new List<PathNode>();
         PathNode currentNode = endNode;
-
-        Debug.Log("Start Node " + startNode.gridX + ":" + startNode.gridY);
-        Debug.Log("End node " + endNode.gridX + ":" + endNode.gridY);
 
         while (currentNode != startNode)
         {
@@ -112,7 +109,6 @@ public class PathManager : MonoBehaviour
             waypoints.Add(path[i].worldPosition);
         }
 
-        Debug.Log("Waypoints in path - Convert Path " + waypoints.Count);
         return waypoints.ToArray();
     }
 

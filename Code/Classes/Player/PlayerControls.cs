@@ -13,6 +13,15 @@ public class PlayerControls : MonoBehaviour
     [SerializeField]
     private LayerMask resourceDropperLayer;
 
+    //! Reference to a BuildingManager instance. We send control input, positions, etc, to this to control the in game building system.
+    [SerializeField]
+    private BuildingManager buildingManager;
+
+    private Vector3 testBuildPos;
+
+    //! Bool to control interaction with the BuildingManager
+    private bool buildModeOn = false;
+
     private void Update()
     {
         moveDirection = Vector3.zero;
@@ -44,6 +53,40 @@ public class PlayerControls : MonoBehaviour
             transform.position, 
             transform.position + moveDirection, 
             playerStats.MoveSpeed.Value * (Time.deltaTime * 0.5f));
+
+        if (buildingManager != null)
+        {
+            if (Input.GetKeyDown("b"))
+            {
+                buildModeOn = !buildModeOn;
+                buildingManager.ToggleBuildMode(buildModeOn);
+            }
+
+            if (buildModeOn)
+            {
+                if (Input.GetKeyDown("e")) buildingManager.CycleSelected(1);
+                else if (Input.GetKeyDown("q")) buildingManager.CycleSelected(-1);
+                
+                Plane plane = new Plane(Vector3.up, Vector3.up);
+
+                Vector3 worldPosition = Vector3.zero;
+
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (plane.Raycast(ray, out float enter)) {
+                    worldPosition = ray.GetPoint(enter);
+                    buildingManager.BuildPos = worldPosition;
+                }
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (buildModeOn)
+                {
+                    buildingManager.Build();
+                }
+            }
+        }
     }
 
     private void RemoveDiagonalSpeedBoost()

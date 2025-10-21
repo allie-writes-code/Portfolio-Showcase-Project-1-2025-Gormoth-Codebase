@@ -17,7 +17,7 @@ public class LevelManager : MonoBehaviour
 
     //! Reference to a WorldObjectManager.
     [SerializeField]
-    private WorldObjectManager worldManager;
+    private LevelSpawner levelSpawner;
 
     //! MonoBehaviour Start method.
     private void Start()
@@ -34,21 +34,15 @@ public class LevelManager : MonoBehaviour
             groundPlane.name = "Ground Plane";
         }
 
-        if (worldManager != null)
+        if (levelSpawner != null)
         {
-            worldManager.GenerateNewWorld();
+            levelSpawner.GenerateNewWorld();
         }
 
         if (pathManagerPrefab != null)
         {
             GameObject pathManger = Instantiate(pathManagerPrefab, Vector3.zero, Quaternion.identity);
             pathManger.name = "Path Manager";
-        }
-
-        if (playerPrefab != null)
-        {
-            GameObject playerObject = Instantiate(playerPrefab, new Vector3(0, 1, 0), Quaternion.identity);
-            playerObject.name = "Player";
         }
     }
 }

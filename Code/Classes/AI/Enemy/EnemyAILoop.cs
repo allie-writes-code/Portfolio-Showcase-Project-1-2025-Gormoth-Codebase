@@ -13,34 +13,56 @@ public class EnemyAILoop : MonoBehaviour
     [SerializeField]
     private float playerDistanceCheckRadius;
     [SerializeField]
-    private float attackRadius;
+    private float attackRange;
 
     [SerializeField]
     private LayerMask playerLayer;
 
     [SerializeField]
-    private DelegateListener aiMoveListener;
-    
+    private CharacterStats stats;
+
+    private CharacterHealth myHealth;
+
     private void Start()
     {
         aiMove = GetComponent<AIMove>();
         player = GameObject.Find("Player");
         core = GameObject.Find("Core");
 
-        aiMoveListener.RegisterFunction(DamageCheck);
+        myHealth = GetComponent<CharacterHealth>();
 
         StartCoroutine("PlayerNearCheck");
     }
 
-    //! Don't forget to deregister!!!
-    private void OnDestroy()
+    public void DamageCheck()
     {
-        aiMoveListener.DeregisterFunction(DamageCheck);
+        float dist = 0;
+
+        if (aiMove.target == player.transform)
+        {
+            dist = Vector3.Distance(transform.position, player.transform.position);
+            Debug.Log("Distance from player: " + dist + " - Player pos " + player.transform.position + " - My pos = " + transform.position);
+            if (dist <= attackRange) 
+            { 
+                player.GetComponent<CharacterHealth>().Hurt(Mathf.RoundToInt(stats.Damage.Value));
+                DestroyThisEnemy();
+            }
+        }
+        else if (aiMove.target == core.transform)
+        {
+            dist = Vector3.Distance(transform.position, core.transform.position);
+            Debug.Log("Distance from core: " + dist + " - Core pos = " + core.transform.position + " - My pos = " + transform.position);
+            if (dist <= attackRange)
+            {
+                core.GetComponent<CharacterHealth>().Hurt(Mathf.RoundToInt(stats.Damage.Value));
+                DestroyThisEnemy();
+            }
+        }
     }
 
-    private void DamageCheck()
+    private void DestroyThisEnemy()
     {
-        Debug.Log("Damage check!!!");
+        this.gameObject.GetComponent<CharacterHealth>().Kill();
     }
 
     private void Update()
@@ -64,5 +86,15 @@ public class EnemyAILoop : MonoBehaviour
 
         yield return new WaitForSeconds(Random.Range(1, 3));
         StartCoroutine("PlayerNearCheck");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Projectile")
+        {
+            SimpleProjectileBehaviour behaviour = other.gameObject.GetComponent<SimpleProjectileBehaviour>();
+            myHealth.Hurt(Mathf.RoundToInt(behaviour.Damage));
+            Destroy(other.gameObject);
+        }
     }
 }

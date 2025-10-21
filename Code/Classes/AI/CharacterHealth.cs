@@ -17,6 +17,9 @@ public class CharacterHealth : MonoBehaviour
     [SerializeField]
     private Canvas healthBarCanvas;
 
+    [SerializeField]
+    public DelegateBroadcaster deathBroadcast;
+
     private void Start()
     {
         maxHealth = currentHealth = Mathf.RoundToInt(baseHealthStat.Value);
@@ -45,14 +48,24 @@ public class CharacterHealth : MonoBehaviour
         }
     }
 
+    public void Kill()
+    {
+        Hurt(currentHealth);
+    }
+
     public void Hurt(int amt)
     {
         currentHealth -= amt;
 
-        if (CurrentHealth <= 0 && myDeathLogic != null) 
+        if (CurrentHealth <= 0) 
         {
-            if (myDeathLogic.DeathObject == null) myDeathLogic.DeathObject = this.gameObject;
-            myDeathLogic.Die(); 
+            if (deathBroadcast != null) { deathBroadcast.InvokeMe(); }
+
+            if (myDeathLogic != null)
+            {
+                if (myDeathLogic.DeathObject == null) myDeathLogic.DeathObject = this.gameObject;
+                myDeathLogic.Die();
+            }
         }
     }
 

@@ -7,7 +7,7 @@ public class AIMove : MonoBehaviour
     //! Reference to a Transform to use as a pathfinding target.
     public Transform target;
 
-    //! Move speed (UPDATE THIS TO USE STATS)
+    //! Stats for move speed.
     [SerializeField]
     private CharacterStats stats;
 
@@ -20,8 +20,7 @@ public class AIMove : MonoBehaviour
     //! Vector3 to track position of target and update path when it changes.
     Vector3 lastKnownTargetPosition = Vector3.zero;
 
-    [SerializeField]
-    private DelegateBroadcaster aiMoveBroadcaster;
+    private EnemyAILoop aiLoop;
 
     //! Start method.
     private void Start()
@@ -86,6 +85,7 @@ public class AIMove : MonoBehaviour
 
     private void PathFinish()
     {
-        aiMoveBroadcaster.InvokeMe();
+        if (aiLoop == null) aiLoop = GetComponent<EnemyAILoop>();
+        aiLoop.DamageCheck();
     }
 }

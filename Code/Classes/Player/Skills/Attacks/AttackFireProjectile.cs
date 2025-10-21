@@ -30,7 +30,10 @@ public class AttackFireProjectile : PlayerSkill
 
             if (closestCollider != null)
             {
-                Debug.Log("Enemy target found " + closestCollider.gameObject.name);
+                GameObject newProjectile = Instantiate(SkillPrefab, PlayerObject.transform.position, SkillPrefab.transform.rotation);
+                SimpleProjectileBehaviour behaviour = newProjectile.GetComponent<SimpleProjectileBehaviour>();
+                behaviour.FireProjectile((closestCollider.transform.position - PlayerObject.transform.position).normalized, SkillStat.Value);
+
                 Cooldown.Reset();
             }
         }
