@@ -50,8 +50,8 @@ public class LevelSpawner : ScriptableObject
 
             while (posFound == false)
             {
-                int x = Random.Range(grid.GridMinX, grid.GridMaxX + 1);
-                int y = Random.Range(grid.GridMinY, grid.GridMaxY + 1);
+                int x = Random.Range(grid.GridMinX + 25, grid.GridMaxX - 24);
+                int y = Random.Range(grid.GridMinY + 25, grid.GridMaxY - 24);
                 Vector3 wallPos = new Vector3(x, 1, y);
                 if (grid.HasNode(wallPos) && grid.IsNodeClear(wallPos))
                 {

@@ -17,14 +17,14 @@ public class SimpleProjectileBehaviour : MonoBehaviour
     //! Bool variable, once set to true, this projectile will start moving.
     private bool alive = false;
 
-    private float damage = 0;
+    private int damage = 0;
 
     public float Damage
     {
         get { return damage; }
     }
 
-    public void FireProjectile(Vector3 dir, float dmg)
+    public void FireProjectile(Vector3 dir, int dmg)
     {
         direction = dir;
         damage = dmg;
@@ -38,7 +38,7 @@ public class SimpleProjectileBehaviour : MonoBehaviour
             aliveTimer += (Time.deltaTime);
             if (aliveTimer > timeToLive) Destroy(this.gameObject);
             
-            transform.Translate(direction * moveSpeedStat.Value * (Time.deltaTime * 0.5f));
+            transform.Translate(direction * moveSpeedStat.ValueFloat * (Time.deltaTime * 0.5f));
         }
     }
 }

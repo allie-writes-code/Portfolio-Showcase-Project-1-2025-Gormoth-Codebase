@@ -32,7 +32,7 @@ public class AttackFireProjectile : PlayerSkill
             {
                 GameObject newProjectile = Instantiate(SkillPrefab, PlayerObject.transform.position, SkillPrefab.transform.rotation);
                 SimpleProjectileBehaviour behaviour = newProjectile.GetComponent<SimpleProjectileBehaviour>();
-                behaviour.FireProjectile((closestCollider.transform.position - PlayerObject.transform.position).normalized, SkillStat.Value);
+                behaviour.FireProjectile((closestCollider.transform.position - PlayerObject.transform.position).normalized, SkillStat.ValueInt);
 
                 Cooldown.Reset();
             }
@@ -52,7 +52,7 @@ public class AttackFireProjectile : PlayerSkill
                 {
                     GameObject newProjectile = Instantiate(SkillPrefab, PlayerObject.transform.position, SkillPrefab.transform.rotation);
                     SimpleProjectileBehaviour behaviour = newProjectile.GetComponent<SimpleProjectileBehaviour>();
-                    behaviour.FireProjectile((closestCollider.transform.position - PlayerObject.transform.position).normalized, SkillStat.Value);
+                    behaviour.FireProjectile((closestCollider.transform.position - PlayerObject.transform.position).normalized, SkillStat.ValueInt);
 
                     Cooldown.Reset();
                 }

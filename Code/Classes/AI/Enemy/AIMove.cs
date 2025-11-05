@@ -11,16 +11,20 @@ public class AIMove : MonoBehaviour
     [SerializeField]
     private CharacterStats stats;
 
+    [SerializeField]
+    private float waypointCheckDistance = 0f;
+
     //! Vector3 array to store path.
     Vector3[] path;
 
     //! Index value to track position on path.
     int targetIndex;
 
-    //! Vector3 to track position of target and update path when it changes.
-    Vector3 lastKnownTargetPosition = Vector3.zero;
+    private Vector3 currentWaypoint;
 
     private EnemyAILoop aiLoop;
+
+    private bool onPath = false;
 
     //! Start method.
     private void Start()
@@ -32,60 +36,52 @@ public class AIMove : MonoBehaviour
     //! If target is not null and last known target position is not the target's current position, it finds a new path.
     IEnumerator UpdatePathCheck()
     {
-        if (target != null)
+        while (true)
         {
-            if (lastKnownTargetPosition != target.position)
+            if (target != null)
             {
-                lastKnownTargetPosition = target.position;
+                onPath = false;
                 PathQueue.RequestPath(transform.position, target.position, OnPathFound);
             }
-        }
 
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine("UpdatePathCheck");
+            yield return new WaitForSeconds(1f);
+        }
     }
 
     //! Callback from FinishedProcessingPath in PathQueue, returned after PathManager processes a path.
     //! Will not run if a successful path is not found.
     public void OnPathFound(Vector3[] newPath, bool pathSuccessful)
     {
-        StopCoroutine("FollowPath");
-
         if (pathSuccessful)
         {
             path = newPath;
             targetIndex = 0;
-            StartCoroutine("FollowPath");
+            currentWaypoint = path[0];
+            onPath = true;
         }
     }
 
-    //! Looping Coroutine to move this GameObject's transform along the path.
-    IEnumerator FollowPath()
+    private void Update()
     {
-        Vector3 currentWaypoint = path[0];
+        if (!onPath) return;
 
-        while (true)
+        if (target != null)
         {
-            if (transform.position == currentWaypoint)
-            {
-                targetIndex++;
-                if (targetIndex >= path.Length)
-                {
-                    PathFinish();
-                    yield break;
-                }
+            if (aiLoop == null) aiLoop = GetComponent<EnemyAILoop>();
+            if (aiLoop != null) aiLoop.DamageCheck();
+        }
 
-                currentWaypoint = path[targetIndex];
+        if (Vector3.Distance(currentWaypoint, transform.position) <= waypointCheckDistance)
+        {
+            targetIndex++;
+            if (targetIndex >= path.Length)
+            {
+                onPath = false;
             }
 
-            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, stats.MoveSpeed.Value * (Time.deltaTime * 0.5f));
-            yield return null;
+            currentWaypoint = path[targetIndex];
         }
-    }
 
-    private void PathFinish()
-    {
-        if (aiLoop == null) aiLoop = GetComponent<EnemyAILoop>();
-        aiLoop.DamageCheck();
+        transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, stats.MoveSpeed * (Time.deltaTime * 0.5f));
     }
 }

@@ -22,7 +22,7 @@ public class ResourceCarry : MonoBehaviour
 
     //! Resource collection radius. Serialised to allow editor access.
     [SerializeField]
-    private int resourceCollectRadius = 5;
+    private Stat resourceCollectRadius;
 
     //! Bool to determine if this object is the player or not. This class is also used for other collection objects.
     [SerializeField]
@@ -55,9 +55,9 @@ public class ResourceCarry : MonoBehaviour
         numCollidersHit = 0;
         if (isPlayer)
         {
-            if (carriedResources.Count < stats.Carry.Value)
+            if (carriedResources.Count < stats.Carry)
             {
-                numCollidersHit = Physics.OverlapSphereNonAlloc(transform.position, resourceCollectRadius, resourceItemColliders, resourceItemsLayer, QueryTriggerInteraction.Collide);
+                numCollidersHit = Physics.OverlapSphereNonAlloc(transform.position, resourceCollectRadius.ValueFloat, resourceItemColliders, resourceItemsLayer, QueryTriggerInteraction.Collide);
 
                 if (numCollidersHit > 0)
                 {
@@ -65,7 +65,7 @@ public class ResourceCarry : MonoBehaviour
                     {
                         ResourceItemInteract ri = resourceItemColliders[i].gameObject.GetComponent<ResourceItemInteract>();
 
-                        if (!ri.BeingCollected && !ri.DroppedByPlayer && !ri.IsWaiting)
+                        if (!ri.BeingConsumed && !ri.BeingCollected && !ri.DroppedByPlayer && !ri.IsWaiting)
                         {
                             ri.CollectMe(this.gameObject);
                         }
@@ -74,7 +74,7 @@ public class ResourceCarry : MonoBehaviour
 
                 if (carriedResources.Count > 0)
                 {
-                    numCollidersHit = Physics.OverlapSphereNonAlloc(transform.position, resourceCollectRadius, resourceItemColliders, carryObjectsLayer);
+                    numCollidersHit = Physics.OverlapSphereNonAlloc(transform.position, resourceCollectRadius.ValueFloat, resourceItemColliders, carryObjectsLayer);
 
                     if (numCollidersHit > 0)
                     {
@@ -84,7 +84,7 @@ public class ResourceCarry : MonoBehaviour
             }
             else
             {
-                numCollidersHit = Physics.OverlapSphereNonAlloc(transform.position, resourceCollectRadius, resourceItemColliders, carryObjectsLayer);
+                numCollidersHit = Physics.OverlapSphereNonAlloc(transform.position, resourceCollectRadius.ValueFloat, resourceItemColliders, carryObjectsLayer);
 
                 if (numCollidersHit > 0)
                 {
@@ -94,7 +94,7 @@ public class ResourceCarry : MonoBehaviour
         }
         else
         {
-            numCollidersHit = Physics.OverlapSphereNonAlloc(transform.position, resourceCollectRadius, resourceItemColliders, resourceItemsLayer, QueryTriggerInteraction.Collide);
+            numCollidersHit = Physics.OverlapSphereNonAlloc(transform.position, resourceCollectRadius.ValueFloat, resourceItemColliders, resourceItemsLayer, QueryTriggerInteraction.Collide);
 
             if (numCollidersHit > 0)
             {
@@ -102,7 +102,7 @@ public class ResourceCarry : MonoBehaviour
                 {
                     ResourceItemInteract ri = resourceItemColliders[i].gameObject.GetComponent<ResourceItemInteract>();
 
-                    if (!ri.BeingCollected && !ri.IsWaiting)
+                    if (!ri.BeingConsumed && !ri.BeingCollected && !ri.IsWaiting)
                     {
                         ri.CollectMe(this.gameObject);
                     }
@@ -156,10 +156,10 @@ public class ResourceCarry : MonoBehaviour
 
         if (isPlayer)
         {
-            if (carriedResources.Count < stats.Carry.BaseValue)
+            if (carriedResources.Count < stats.Carry)
             {
                 carriedResources.Add(res);
-                Debug.Log("Carrying " + carriedResources.Count + " resources.");
+                
                 success = true;
             }
         }

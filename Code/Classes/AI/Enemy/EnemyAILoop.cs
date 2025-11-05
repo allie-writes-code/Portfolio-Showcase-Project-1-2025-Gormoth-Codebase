@@ -41,20 +41,20 @@ public class EnemyAILoop : MonoBehaviour
         if (aiMove.target == player.transform)
         {
             dist = Vector3.Distance(transform.position, player.transform.position);
-            Debug.Log("Distance from player: " + dist + " - Player pos " + player.transform.position + " - My pos = " + transform.position);
             if (dist <= attackRange) 
-            { 
-                player.GetComponent<CharacterHealth>().Hurt(Mathf.RoundToInt(stats.Damage.Value));
+            {
+                Debug.Log("Distance from player: " + dist + " - Player pos " + player.transform.position + " - My pos = " + transform.position);
+                player.GetComponent<CharacterHealth>().Hurt(Mathf.RoundToInt(stats.Damage));
                 DestroyThisEnemy();
             }
         }
         else if (aiMove.target == core.transform)
         {
             dist = Vector3.Distance(transform.position, core.transform.position);
-            Debug.Log("Distance from core: " + dist + " - Core pos = " + core.transform.position + " - My pos = " + transform.position);
             if (dist <= attackRange)
             {
-                core.GetComponent<CharacterHealth>().Hurt(Mathf.RoundToInt(stats.Damage.Value));
+                Debug.Log("Distance from core: " + dist + " - Core pos = " + core.transform.position + " - My pos = " + transform.position);
+                core.GetComponent<CharacterHealth>().Hurt(Mathf.RoundToInt(stats.Damage));
                 DestroyThisEnemy();
             }
         }

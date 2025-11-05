@@ -1,18 +1,20 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
-public class NodeGrid : MonoBehaviour
+[CreateAssetMenu(fileName = "New Node Grid", menuName = "Scriptable Objects/AStar/Node Gride", order = 1)]
+public class NodeGrid : ScriptableObject
 {
     public LayerMask unwalkableMask;
     public Vector2 gridWorldSize;
     public float nodeRadius;
-    PathNode[,] grid;
+    public PathNode[,] grid;
 
-    float nodeDiameter;
+    [HideInInspector]
+    public float nodeDiameter;
+
     int gridSizeX, gridSizeY;
 
-    void Awake()
+    public void Init()
     {
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
@@ -31,7 +33,7 @@ public class NodeGrid : MonoBehaviour
     void CreateGrid()
     {
         grid = new PathNode[gridSizeX, gridSizeY];
-        Vector3 worldBottomLeft = transform.position - 
+        Vector3 worldBottomLeft = Vector3.zero - 
             Vector3.right * gridWorldSize.x / 2 - 
             Vector3.forward * gridWorldSize.y /2;
 
@@ -98,20 +100,4 @@ public class NodeGrid : MonoBehaviour
 
         return grid[x, y];
     }
-
-    /*
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
-
-        if (grid != null)
-        {
-            foreach (PathNode n in grid)
-            {
-                Gizmos.color = (n.walkable) ? Color.white : Color.red;
-                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
-            }
-        }
-    }
-    */
 }

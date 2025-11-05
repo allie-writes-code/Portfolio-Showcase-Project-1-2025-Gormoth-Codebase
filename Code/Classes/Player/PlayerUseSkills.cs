@@ -25,6 +25,7 @@ public class PlayerUseSkills : MonoBehaviour
 
             if (skill.Cooldown.IsReady())
             {
+                
                 skill.UseSkill();
             }
             else

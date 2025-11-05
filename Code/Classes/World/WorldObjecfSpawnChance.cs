@@ -9,13 +9,18 @@ public class WorldObjecfSpawnChance : ScriptableObject
     [SerializeField]
     private int spawnChance;
     [SerializeField]
-    private float percentAwayFromCentreToSpawn;
+    private float minPercentAwayFromCentreToSpawn;
+    [SerializeField]
+    private float maxPercentAwayFromCentreToSpawn;
+
+    [SerializeField]
+    private int howManyToSpawn;
 
     public bool SpawnRollPass()
     {
         bool pass = false;
 
-        int rnd = Random.Range(0, 101);
+        int rnd = Random.Range(1, 101);
         if (rnd <= spawnChance)
         {
             pass = true;
@@ -24,8 +29,20 @@ public class WorldObjecfSpawnChance : ScriptableObject
         return pass;
     }
 
+    public int HowManyToSpawn
+    {
+        get { return howManyToSpawn; }
+    }
+
     public int MinDistance(int max)
     {
-        return Mathf.RoundToInt(max * percentAwayFromCentreToSpawn);
+        int rmin = Mathf.RoundToInt(max * minPercentAwayFromCentreToSpawn);
+        return rmin;
+    }
+
+    public int MaxDistance(int max)
+    {
+        int rmax = Mathf.RoundToInt(max * maxPercentAwayFromCentreToSpawn);
+        return rmax;
     }
 }

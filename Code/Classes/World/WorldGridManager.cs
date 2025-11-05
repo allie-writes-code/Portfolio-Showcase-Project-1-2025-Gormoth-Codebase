@@ -17,12 +17,16 @@ public class WorldGridManager : ScriptableObject
     public int GridMaxX { get { return gridMaxX; } }
     public int GridMaxY { get { return gridMaxY; } }
 
+    [SerializeField]
+    private NodeGrid pathGrid;
+
     //! Method to check for a WorldGridNode in the grid, and update its isOccupied bool to the provided value if found.
     public void OccupyNode(Vector3 pos, bool occupied = true)
     {
         if (HasNode(pos))
         {
             GetNodeFromPos(pos).isOccupied = occupied;
+            pathGrid.UpdateWalkableAtPoint(pos);
         }
     }
 
@@ -88,12 +92,6 @@ public class WorldGridManager : ScriptableObject
         gridMinY = -yHalf;
         gridMaxX = xHalf;
         gridMaxY = yHalf;
-
-        Debug.Log("New grid defined " +
-            " - X Min: " + gridMinX +
-            " - Y Min: " + gridMinY +
-            " - X Max: " + gridMaxX +
-            " - Y Max: " + GridMaxY);
 
         for (int x = gridMinX; x <= gridMaxX; x++)
         {

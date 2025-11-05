@@ -35,66 +35,85 @@ public class WorldObjectSpawner : ScriptableObject
     private void LevelLoaded()
     {
         SpawnInitialResourceDroppers();
+        SpawnInitialBuildings();
         SpawnPlayer();
         levelLoadedBroadcaster.InvokeMe();
+    }
+
+    private void SpawnInitialBuildings()
+    {
+        foreach (WorldObjecfSpawnChance chance in spawnData.initialSpawnBuildings)
+        {
+            for (int i = 0; i < chance.HowManyToSpawn; i++)
+            {
+                Vector3 spawnPos = GetClearPosWithDistance(chance.MinDistance(grid.GridMaxX), chance.MaxDistance(grid.GridMaxX));
+                GameObject newBuilding = Instantiate(chance.worldObjectPrefab, spawnPos, chance.worldObjectPrefab.transform.rotation);
+                grid.OccupyNode(spawnPos);
+                grid.SetNodeObject(spawnPos, newBuilding);
+            }
+        }
     }
 
     private void SpawnInitialResourceDroppers()
     {
         int totalToSpawn = spawnData.resourceDroppersMaxAmt;
-        List<GameObject> selectedPrefabs = new List<GameObject>();
-        Vector3 ranPos = Vector3.zero;
+        spawnData.currentResourceDroppersTotal = 0;
+        List<WorldObjecfSpawnChance> selectedChances = new List<WorldObjecfSpawnChance>();
+
         for (int i = 0; i <= totalToSpawn;)
         {
-            selectedPrefabs.Clear();
-            bool posFound = false;
-
-            int breaker = 0;
-
-            // Loop until we find a position in grid that's unoccupied.
-            while (posFound == false)
-            {
-                ranPos = new Vector3(Random.Range(grid.GridMinX, grid.GridMaxX + 1), 1, Random.Range(grid.GridMinY, grid.GridMaxY + 1));
-
-                if (grid.IsNodeClear(ranPos)) posFound = true;
-
-                if (breaker > 1000)
-                {
-                    Debug.Log("Breakpoint hit looking for pos.");
-                    posFound = true;
-                }
-
-                breaker++;
-            }
-
-            float distance = Vector3.Distance(Vector3.zero, ranPos);
+            selectedChances.Clear();
 
             // Get each applicable object based on its spawn chance data.
             foreach (WorldObjecfSpawnChance chance in spawnData.resourceDroppers)
             {
-                if (distance >= chance.MinDistance(grid.GridMaxX))
+                if (chance.SpawnRollPass())
                 {
-                    if (chance.SpawnRollPass())
-                    {
-                        selectedPrefabs.Add(chance.worldObjectPrefab);
-                    }
+                    selectedChances.Add(chance);
                 }
             }
 
-            // Instantiate one of the objects from the list.
-            if (selectedPrefabs.Count > 0)
+            if (selectedChances.Count > 0)
             {
-                GameObject prefab = selectedPrefabs[Random.Range(0, selectedPrefabs.Count)];
-                GameObject newDropperObject = Instantiate(prefab, ranPos, prefab.transform.rotation);
+                WorldObjecfSpawnChance selected = selectedChances[Random.Range(0, selectedChances.Count)];
+
+                // We use GridMaxX for both because we want the values as percentages of the max.
+                Vector3 spawnPos = GetClearPosWithDistance(selected.MinDistance(grid.GridMaxX), selected.MaxDistance(grid.GridMaxX));
+
+                GameObject newDropperObject = Instantiate(selected.worldObjectPrefab, spawnPos, selected.worldObjectPrefab.transform.rotation);
                 newDropperObject.name = "Resource Dropper";
-
-                grid.OccupyNode(ranPos);
-                grid.SetNodeObject(ranPos, newDropperObject);
-
+                grid.OccupyNode(spawnPos);
+                grid.SetNodeObject(spawnPos, newDropperObject);
                 i++;
             }
         }
     }
+
+    private Vector3 GetClearPosWithDistance(int min, int max)
+    {
+        bool posFound = false;
+        Vector3 ranPos = Vector3.zero;
+        int breakcount = 0;
+        while (posFound == false)
+        {
+            breakcount++;
+            if (breakcount > 1000) 
+            {
+                Debug.Log("Break point in GetClearPosWithDistance hit.");
+                return Vector3.zero; 
+            }
+            ranPos = new Vector3(Random.Range(-max, max + 1), 1, Random.Range(-max, max + 1));
+
+            // Check min distances, avoids having to use Vector3.Distance
+            if (ranPos.x <= -min || ranPos.x >= min
+                || ranPos.z <= -min || ranPos.z >= min)
+            {
+                if (grid.IsNodeClear(ranPos)) posFound = true;
+            }
+        }
+
+        return ranPos;
+    } 
 
     private void SpawnPlayer()
     {

@@ -1,18 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public class PathManager : MonoBehaviour
 {
     PathQueue pathQueue;
-    NodeGrid grid;
+
+    [SerializeField]
+    private NodeGrid grid;
 
     void Awake()
     {
         pathQueue = GetComponent<PathQueue>();
-        grid = GetComponent<NodeGrid>();
+        grid.Init();
     }
 
     public void StartFindPath(Vector3 startPos, Vector3 targetPos)

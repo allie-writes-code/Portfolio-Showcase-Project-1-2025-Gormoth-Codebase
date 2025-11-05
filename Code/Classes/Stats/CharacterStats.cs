@@ -4,11 +4,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Character Stats", menuName = "Scriptable Objects/Stats/Chacter Stats", order = 2)]
 public class CharacterStats : ScriptableObject
 {
-    //! Damage Stat reference.
+    //! Damage Stat references.
     [SerializeField]
     private Stat damage;
 
-    //! Carry amount Stat reference
+    //! Carry amount Stat references.
     [SerializeField]
     private Stat carry;
 
@@ -16,19 +16,19 @@ public class CharacterStats : ScriptableObject
     [SerializeField]
     private Stat cooldown;
 
-    //! Move speed stat reference.
+    //! Move speed stat references.
     [SerializeField]
     private Stat moveSpeed;
 
     //! Public Get method for damage Stat.
-    public Stat Damage { get { return damage; } }
+    public int Damage { get { return damage.ValueInt; } }
 
     //! Public Get method for carry Stat.
-    public Stat Carry { get { return carry; } }
+    public int Carry { get { return carry.ValueInt; } }
 
     //! Public Get method for cooldown speed Stat.
-    public Stat Cooldown { get { return cooldown; } }
+    public float Cooldown { get { return cooldown.ValueFloat; } }
 
     //! Public Get method for move speed Stat.
-    public Stat MoveSpeed { get { return moveSpeed; } }
+    public float MoveSpeed { get { return moveSpeed.ValueFloat; } }
 }

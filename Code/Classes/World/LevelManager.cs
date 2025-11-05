@@ -34,15 +34,15 @@ public class LevelManager : MonoBehaviour
             groundPlane.name = "Ground Plane";
         }
 
-        if (levelSpawner != null)
-        {
-            levelSpawner.GenerateNewWorld();
-        }
-
         if (pathManagerPrefab != null)
         {
             GameObject pathManger = Instantiate(pathManagerPrefab, Vector3.zero, Quaternion.identity);
             pathManger.name = "Path Manager";
+        }
+
+        if (levelSpawner != null)
+        {
+            levelSpawner.GenerateNewWorld();
         }
     }
 }

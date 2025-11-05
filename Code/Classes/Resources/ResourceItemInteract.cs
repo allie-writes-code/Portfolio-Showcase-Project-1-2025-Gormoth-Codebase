@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* TO DO:
+ * - This class currently makes the huge assumption that ResourceCarry and ResourceConsumer objects will never be destroyed. 
+ * This should be changed and logic should account for if object gets destroyed before the ResourceItem can reach it.
+ */
+
 //! MonoBehaviour class, attach to ResourceItem's to enable their behaviours in game.
 public class ResourceItemInteract : MonoBehaviour
 {
@@ -44,11 +49,13 @@ public class ResourceItemInteract : MonoBehaviour
     //! Float to control how long it waits for.
     private float waitTime = 10;
 
+    //! Bool to control if item is being sent to a consumer.
+    private bool beingConsumed = false;
+
     //! Public Get method for isWaiting.
-    public bool IsWaiting
-    {
-        get { return isWaiting; }
-    }
+    public bool IsWaiting { get { return isWaiting; } }
+
+    public bool BeingConsumed { get { return beingConsumed; } }
 
     //! Run this method to initiate collection of the item by an object with the ResourceCarry component.
     public void CollectMe(GameObject c)
@@ -56,6 +63,15 @@ public class ResourceItemInteract : MonoBehaviour
         if (!beingCollected && !isWaiting)
         {
             beingCollected = true;
+            collector = c.transform;
+        }
+    }
+
+    public void ConsumeMe(GameObject c)
+    {
+        if (!beingConsumed && !isWaiting)
+        {
+            beingConsumed = true;
             collector = c.transform;
         }
     }
@@ -69,9 +85,9 @@ public class ResourceItemInteract : MonoBehaviour
     //! MonoBehaviour Update method.
     private void Update()
     {
-        if (beingCollected && collector != null && !isWaiting)
+        if ((beingConsumed || beingCollected) && collector != null && !isWaiting)
         {
-            transform.position = Vector3.MoveTowards(transform.position, collector.position, collectSpeed.Value * (Time.deltaTime * 0.5f));
+            transform.position = Vector3.MoveTowards(transform.position, collector.position, collectSpeed.ValueFloat * (Time.deltaTime * 0.5f));
         }
     }
 
@@ -79,11 +95,18 @@ public class ResourceItemInteract : MonoBehaviour
     //! We're using OnTriggerEnter so a trigger can be used on ResourceItem's instead, intentionally so they don't collide with other objects.
     private void OnTriggerEnter(Collider other)
     {
-        if (beingCollected && collector != null && !isWaiting)
+        if ((beingConsumed || beingCollected) && collector != null && !isWaiting)
         {
             if (other.gameObject.transform == collector)
             {
-                if (other.gameObject.GetComponent<ResourceCarry>().AddToTotal(myResource))
+                if (beingConsumed)
+                {
+                    // We don't need to do this here, due to ResourceConsumer totals being incremented already:
+                    //other.gameObject.GetComponent<ResourceConsumer>().ConsumeResource(myResource);
+
+                    Destroy(this.gameObject);
+                }
+                else if (other.gameObject.GetComponent<ResourceCarry>().AddToTotal(myResource))
                 {
                     Destroy(this.gameObject);
                 }

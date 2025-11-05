@@ -1,48 +1,57 @@
 using System;
 using UnityEngine;
 
-//! ScriptableObject class for defining stats. Stat name is defined via object / file name.
 [CreateAssetMenu(fileName = "New Stat", menuName = "Scriptable Objects/Stats/Stat", order = 1)]
 public class Stat : ScriptableObject
 {
-    //!  Float value, set in editor, no access at runtime to change value.
-    //! Return for this value, by default, gives the adjusted value of: (base + add) * xplier 
+    //! Value to define the 'default' for this stat. Will reset to this on enable.
     [SerializeField]
-    private float total;
+    private float defaultValue;
+
+    private float value;
+
+    private void OnEnable()
+    {
+        value = defaultValue;
+    }
 
     [SerializeField]
-    private float baseAmt;
-    [SerializeField]
-    private float xPlier;
-
+    private Stat xPlier;
 
     //! Public Get method for stat value.
-    public float Value
+    public float ValueFloat
     {
         get 
-        { 
-            total = (baseAmt * xPlier); 
-            return total;
+        {
+            float f;
+            if (xPlier != null) 
+            {
+                f = value * xPlier.ValueFloat;
+            }
+            else
+            {
+                f = value;
+            }
+            //Debug.Log("Returning " + f + " as a float from stat " + this.name);
+            return f;
         }
     }
 
-    //! Public Get method for baseAmt.
-    public float BaseValue
+    public int ValueInt
     {
-        get { return baseAmt; }
-    }
-
-    //! Public Get and Set method for addAmt.
-    public float BaseAmt
-    {
-        get { return baseAmt; }
-        set { baseAmt = value; }
-    }
-
-    //! Public Get and Set method for xPlier.
-    public float XPlier
-    {
-        get { return xPlier; }
-        set { xPlier = value; }
+        get
+        {
+            int i;
+            if (xPlier != null) 
+            { 
+                i = Mathf.RoundToInt(value * xPlier.ValueFloat); 
+            }
+            else
+            {
+                i = Mathf.RoundToInt(value);
+            }
+            //Debug.Log("Returning " + i + " as an int from stat " + this.name);
+            return i;
+        }
     }
 }

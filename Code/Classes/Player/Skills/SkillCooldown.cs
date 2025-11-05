@@ -20,7 +20,7 @@ public class SkillCooldown : ScriptableObject
         set 
         { 
             timer = value;
-            if (timer > (baseAmt - (baseAmt * cooldownStat.Value))) timer = (baseAmt - (baseAmt * cooldownStat.Value));
+            if (timer > (baseAmt - (baseAmt * cooldownStat.ValueFloat))) timer = (baseAmt - (baseAmt * cooldownStat.ValueFloat));
         }
     }
 
@@ -32,8 +32,8 @@ public class SkillCooldown : ScriptableObject
     public bool IsReady()
     {
         bool ready = false;
-        
-        if (timer >= (baseAmt - (baseAmt * cooldownStat.Value)))
+        // Debug.Log("Cooldown check: " + timer + " checked against: " + (baseAmt - (baseAmt * cooldownStat.ValueFloat)) + " - from " + this.name);
+        if (timer >= (baseAmt - (baseAmt * cooldownStat.ValueFloat)))
         {
             ready = true;
         }

@@ -1,0 +1,24 @@
+===== 4/11/25 =====
+Fixes:
+- Fixed bug with ResourceItems not destroying themselves when they reached Consumers.
+- Fixed bug where items were being 'Collected', rather than 'Consumed'.
+
+- Fixed a bunch of bugs that fixing the last bug caused...
+(including...)
+- : Items were then immediately 'Collected' by the Player, if they were in range and had carry space.
+- : Core would do the same thing! Hooray!
+- : ResourceItems didn't move towards Consumers like they did Collectors.
+- : (These were all because I'd forgotten to include checks for beingConsumed, so fixing the bug that used the incorrect 'beingCollected', suddenly exposed all the logic gaps where beingConsumed should have been accounted for but wasn't.
+
+- Fixed rotation bug on Placeables when they spawn, due to lazy parenting.
+- Fixed a bug where Constructors wouldn't do the check to spawn a placeable (and thus spawn one if they should) if the player had no stored total resources.
+- Fixed bug with constructors only building 1 placeable.
+- Fixed bug with player being able to collect multiple Placeables.
+
+Changes:
+- Added placeable functionality. These now spawn on Constructors.
+- Added ability to pick up a Placeable.
+- Added ability to 'place' placeable, spawns a building. Atm, this is just turrets, haha.
+- Adjusted game camera, player size had changed slightly, was a bit off centre again on the Y.
+
+===== 00/00/00 =====

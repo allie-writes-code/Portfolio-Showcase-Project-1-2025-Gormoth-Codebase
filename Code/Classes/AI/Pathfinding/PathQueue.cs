@@ -37,7 +37,7 @@ public class PathQueue : MonoBehaviour
 
     public void FinishedProcessingPath(Vector3[] path, bool success)
     {
-        if (currentPathRequest.callback != null)
+        if (currentPathRequest.callback.Target != null)
         {
             currentPathRequest.callback(path, success);
             isProcessingPath = false;

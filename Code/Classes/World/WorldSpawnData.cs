@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +29,11 @@ public class WorldSpawnData : ScriptableObject
 
     public WorldObjecfSpawnChance[] resourceDroppers;
     public int resourceDroppersMaxAmt = 50;
+
+    [NonSerialized]
     public int currentResourceDroppersTotal = 0;
+
+    public WorldObjecfSpawnChance[] initialSpawnBuildings;
 
     public Stat maxEnemiesToSpawn;
     public int currentEnemyTotal = 0;

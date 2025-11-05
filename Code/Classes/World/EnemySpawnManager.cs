@@ -24,7 +24,7 @@ public class EnemySpawnManager : MonoBehaviour
     {
         if (!spawningActive) return;
 
-        if (waveTimer < waveTimeStat.Value)
+        if (waveTimer < waveTimeStat.ValueFloat)
         {
             waveTimer += Time.deltaTime;
         }
@@ -37,9 +37,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     private IEnumerator SpawnWave()
     {
-        Debug.Log("Spawning wave");
-
-        for(int i = 0; i < spawnData.maxEnemiesToSpawn.Value; i++)
+        for(int i = spawnData.currentEnemyTotal; i < spawnData.maxEnemiesToSpawn.ValueInt; i++)
         {
             GameObject newEnemy = Instantiate(spawnData.enemyPrefab, spawnData.boundaryPositions[Random.Range(0, spawnData.boundaryPositions.Count)], spawnData.enemyPrefab.transform.rotation);
             newEnemy.name = "Enemy";
@@ -63,6 +61,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     private void BeginSpawningEnemies()
     {
+        spawnData.currentEnemyTotal = 0;
         spawningActive = true;
     }
 
