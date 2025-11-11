@@ -22,8 +22,6 @@ public class AIMove : MonoBehaviour
 
     private Vector3 currentWaypoint;
 
-    private EnemyAILoop aiLoop;
-
     private bool onPath = false;
 
     //! Start method.
@@ -64,12 +62,6 @@ public class AIMove : MonoBehaviour
     private void Update()
     {
         if (!onPath) return;
-
-        if (target != null)
-        {
-            if (aiLoop == null) aiLoop = GetComponent<EnemyAILoop>();
-            if (aiLoop != null) aiLoop.DamageCheck();
-        }
 
         if (Vector3.Distance(currentWaypoint, transform.position) <= waypointCheckDistance)
         {

@@ -15,13 +15,7 @@ public class Placeable : ScriptableObject
         get { return distanceFromCoreBase.ValueFloat; }
     }
 
-    [SerializeField]
-    private CostIngredient placeableCost;
-
-    public CostIngredient PlaceableCost
-    {
-        get { return placeableCost; }
-    }
+    public CostIngredient PlaceableCost;
 
     [Serializable]
     public class CostIngredient

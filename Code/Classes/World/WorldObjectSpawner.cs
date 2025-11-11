@@ -121,6 +121,12 @@ public class WorldObjectSpawner : ScriptableObject
         {
             GameObject playerObject = Instantiate(spawnData.playerPrefab, new Vector3(0, 1, 0), spawnData.playerPrefab.transform.rotation);
             playerObject.name = "Player";
+
+            if (spawnData.placementDisplayPrefab != null)
+            {
+                GameObject placementDisplay = Instantiate(spawnData.placementDisplayPrefab, playerObject.transform.position, spawnData.placementDisplayPrefab.transform.rotation);
+                placementDisplay.name = "Placement Display UI";
+            }
         }
     }
 

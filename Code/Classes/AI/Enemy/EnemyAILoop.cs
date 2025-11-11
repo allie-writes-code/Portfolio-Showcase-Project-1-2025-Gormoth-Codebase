@@ -71,6 +71,10 @@ public class EnemyAILoop : MonoBehaviour
         {
             aiMove.target = core.transform;
         }
+        else
+        {
+            DamageCheck();
+        }
     }
 
     private IEnumerator PlayerNearCheck()

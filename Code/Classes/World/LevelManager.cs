@@ -7,10 +7,6 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private GameObject pathManagerPrefab;
 
-    //! Prefab for the Player object. Set in editor.
-    [SerializeField]
-    private GameObject playerPrefab;
-
     //! Prefab for the Ground Plane object. Set in editor.
     [SerializeField]
     private GameObject groundPlanePrefab;

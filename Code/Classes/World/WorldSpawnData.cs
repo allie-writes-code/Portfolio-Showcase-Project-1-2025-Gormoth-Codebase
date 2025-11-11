@@ -27,6 +27,8 @@ public class WorldSpawnData : ScriptableObject
 
     public GameObject enemyPrefab;
 
+    public GameObject placementDisplayPrefab;
+
     public WorldObjecfSpawnChance[] resourceDroppers;
     public int resourceDroppersMaxAmt = 50;
 
@@ -36,7 +38,9 @@ public class WorldSpawnData : ScriptableObject
     public WorldObjecfSpawnChance[] initialSpawnBuildings;
 
     public Stat maxEnemiesToSpawn;
+    [NonSerialized]
     public int currentEnemyTotal = 0;
 
+    [NonSerialized]
     public List<Vector3> boundaryPositions = new List<Vector3>();
 }

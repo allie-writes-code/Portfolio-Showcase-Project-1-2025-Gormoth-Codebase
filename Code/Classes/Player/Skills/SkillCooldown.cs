@@ -5,11 +5,7 @@ public class SkillCooldown : ScriptableObject
 {
     //! Base cooldown time.
     [SerializeField]
-    private int baseAmt = 0;
-
-    //! Stat reference. The stat used to adjust cooldown time - e.g. player cooldown speed.
-    [SerializeField]
-    private Stat cooldownStat;
+    private Stat skillCooldownBase;
 
     //! Float, the current timer for the cooldown. Used to track the cooldown's progress.
     private float timer;
@@ -20,7 +16,7 @@ public class SkillCooldown : ScriptableObject
         set 
         { 
             timer = value;
-            if (timer > (baseAmt - (baseAmt * cooldownStat.ValueFloat))) timer = (baseAmt - (baseAmt * cooldownStat.ValueFloat));
+            if (timer > skillCooldownBase.ValueFloat) timer = skillCooldownBase.ValueFloat;
         }
     }
 
@@ -32,8 +28,8 @@ public class SkillCooldown : ScriptableObject
     public bool IsReady()
     {
         bool ready = false;
-        // Debug.Log("Cooldown check: " + timer + " checked against: " + (baseAmt - (baseAmt * cooldownStat.ValueFloat)) + " - from " + this.name);
-        if (timer >= (baseAmt - (baseAmt * cooldownStat.ValueFloat)))
+        
+        if (timer >= skillCooldownBase.ValueFloat)
         {
             ready = true;
         }

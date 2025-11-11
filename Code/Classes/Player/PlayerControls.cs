@@ -17,6 +17,10 @@ public class PlayerControls : MonoBehaviour
     [SerializeField]
     private NodeGrid grid;
 
+    // Resource load debug variables:
+    private GameResourceManager gameResourceManager = new();
+    // Remove all these ^
+
     private void Update()
     {
         moveDirection = Vector3.zero;
@@ -48,6 +52,10 @@ public class PlayerControls : MonoBehaviour
             transform.position, 
             transform.position + moveDirection, 
             playerStats.MoveSpeed * (Time.deltaTime * 0.5f));
+
+        // Debug controls for resource load testing.
+        if (Input.GetKeyDown("1")) { gameResourceManager.SaveResourcesToFile(); }
+        if (Input.GetKeyDown("2")) { gameResourceManager.LoadResourcesFromFile(); }
     }
 
     private void RemoveDiagonalSpeedBoost()
@@ -68,14 +76,24 @@ public class PlayerControls : MonoBehaviour
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(grid.gridWorldSize.x, 1, grid.gridWorldSize.y));
 
-        if (grid != null)
+        if (grid.grid != null)
         {
-            foreach (PathNode n in grid.grid)
+            if (grid.grid.Length > 0)
             {
-                if (n.walkable == false)
+                foreach (PathNode n in grid.grid)
                 {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawCube(n.worldPosition, Vector3.one * (grid.nodeDiameter - 0.1f));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                    if (n.walkable == false)
+                    {
+                        Gizmos.color = Color.red;
+                        Gizmos.DrawCube(n.worldPosition, Vector3.one * (grid.nodeDiameter));
+                    }
+                    /*e
+                    else
+                    {
+                        Gizmos.color = Color.blue;
+                        Gizmos.DrawCube(n.worldPosition, Vector3.one * (grid.nodeDiameter));
+                    }
+                    */
                 }
             }
         }

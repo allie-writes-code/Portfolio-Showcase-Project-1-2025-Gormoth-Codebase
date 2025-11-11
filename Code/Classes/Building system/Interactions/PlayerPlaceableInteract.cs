@@ -4,12 +4,18 @@ using UnityEngine;
 public class PlayerPlaceableInteract : MonoBehaviour
 {
     private bool isCarryingPlaceable = false;
+    private bool isPlacing = false;
+
+    public bool IsCarryingPlaceable { get  { return isCarryingPlaceable; } }
+    public bool IsPlacing { get { return isPlacing; } }
 
     private Vector3 lastStoppedPosition;
     private float currentStoppedTime;
 
     [SerializeField]
     private Stat placementTime;
+
+    public float PlacementPercentage{ get { return (currentStoppedTime / placementTime.ValueFloat); } }
 
     private GameObject heldObject;
 
@@ -33,11 +39,13 @@ public class PlayerPlaceableInteract : MonoBehaviour
         {
             if (lastStoppedPosition != transform.position)
             {
+                if (isPlacing) isPlacing = false;
                 lastStoppedPosition = transform.position;
                 currentStoppedTime = 0;
             }
             else
             {
+                if (!isPlacing) isPlacing = true;
                 currentStoppedTime += Time.deltaTime;
                 if (currentStoppedTime >= placementTime.ValueFloat)
                 {
@@ -55,5 +63,6 @@ public class PlayerPlaceableInteract : MonoBehaviour
     {
         heldObject.GetComponent<PlaceableBehaviour>().PlaceMe();
         isCarryingPlaceable = false;
+        isPlacing = false;
     }
 }
