@@ -2,7 +2,9 @@ For codebase documentation, see:
 https://allie-writes-code.github.io/Portfolio-Showcase-Project-1-2025-Gormoth/
 
 ====================
-Changlog:
+
+Changelog:
+
 ====================
 
 ===== 11/11/25 =====
